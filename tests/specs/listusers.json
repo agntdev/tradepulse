@@ -1,0 +1,16 @@
+[
+  {
+    "name": "/listusers requires admin access",
+    "steps": [
+      {
+        "send": { "text": "/listusers" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "⛔ You don't have permission to list users." }
+          }
+        ]
+      }
+    ]
+  }
+]

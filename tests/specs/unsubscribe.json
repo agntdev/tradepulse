@@ -1,19 +1,45 @@
 [
   {
-    "name": "/unsubscribe",
+    "name": "/unsubscribe shows subscription toggle",
     "steps": [
       {
+        "send": { "text": "/start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }
+        ]
+      },
+      {
+        "send": { "text": "/unsubscribe" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Stop receiving DM alerts (remain in public feed)"
+              "text": "🔔 You're currently subscribed to DM alerts.\n\nTap below to stop receiving signal DMs (you'll still see them in the public channel)."
             }
           }
-        ],
-        "send": {
-          "text": "/unsubscribe"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Unsubscribe button on main menu shows settings",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }
+        ]
+      },
+      {
+        "send": { "callback": "unsubscribe:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "🔔 You're currently subscribed to DM alerts.\n\nTap below to stop receiving signal DMs (you'll still see them in the public channel)."
+            }
+          }
+        ]
       }
     ]
   }

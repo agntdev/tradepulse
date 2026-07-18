@@ -1,21 +1,37 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { mainMenuKeyboard } from "../toolkit/index.js";
+import { mainMenuKeyboard, registerMainMenuItem } from "../toolkit/index.js";
+import { getStore, type UserRecord } from "../store.js";
 
-// The /start handler renders the bot's MAIN MENU — the primary way users operate
-// a button-first bot. A feature adds its own button by calling
-// `registerMainMenuItem(...)` in its own `src/handlers/<slug>.ts`; this handler
-// renders whatever is registered (plus a Help button), so you do NOT edit this
-// file to add a feature. Send ONE message — no placeholder line above the menu.
-const composer = new Composer<Ctx>();
+// Register main menu items — these become buttons on the /start menu.
+registerMainMenuItem({ label: "📊 Status", data: "status:show", order: 20 });
+registerMainMenuItem({ label: "🔕 Unsubscribe", data: "unsubscribe:show", order: 30 });
 
 const WELCOME = "👋 Welcome! Tap a button below to get started.";
 
+const composer = new Composer<Ctx>();
+
 composer.command("start", async (ctx) => {
+  const store = getStore();
+  const userId = ctx.from?.id;
+  if (userId) {
+    const existing = await store.getUser(userId);
+    if (!existing) {
+      const now = new Date().toISOString();
+      const user: UserRecord = {
+        telegram_id: userId,
+        username: ctx.from?.first_name ?? "User",
+        is_premium: false,
+        is_opted_out: false,
+        registered_at: now,
+        last_signal_received: null,
+      };
+      await store.saveUser(user);
+    }
+  }
   await ctx.reply(WELCOME, { reply_markup: mainMenuKeyboard() });
 });
 
-// "Back to menu" — re-render the main menu in place from any sub-view.
 composer.callbackQuery("menu:main", async (ctx) => {
   await ctx.answerCallbackQuery();
   await ctx.editMessageText(WELCOME, { reply_markup: mainMenuKeyboard() });
