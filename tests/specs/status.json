@@ -1,19 +1,45 @@
 [
   {
-    "name": "/status",
+    "name": "/status shows subscription info for a new user",
     "steps": [
       {
+        "send": { "text": "/start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }
+        ]
+      },
+      {
+        "send": { "text": "/status" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Display user's premium status and last signal timestamp"
+              "text": "📊 Your status\n\nPlan: Standard\nNo signals received yet."
             }
           }
-        ],
-        "send": {
-          "text": "/status"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Status button on main menu shows status",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }
+        ]
+      },
+      {
+        "send": { "callback": "status:show" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "📊 Your status\n\nPlan: Standard\nNo signals received yet."
+            }
+          }
+        ]
       }
     ]
   }

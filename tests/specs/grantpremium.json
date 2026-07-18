@@ -1,0 +1,36 @@
+[
+  {
+    "name": "/grantpremium requires admin access",
+    "steps": [
+      {
+        "send": { "text": "/grantpremium 999" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "⛔ You don't have permission to manage premium access." }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/grantpremium with no args shows usage",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "👋 Welcome! Tap a button below to get started." } }
+        ]
+      },
+      {
+        "send": { "text": "/grantpremium" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": { "text": "⛔ You don't have permission to manage premium access." }
+          }
+        ]
+      }
+    ]
+  }
+]
